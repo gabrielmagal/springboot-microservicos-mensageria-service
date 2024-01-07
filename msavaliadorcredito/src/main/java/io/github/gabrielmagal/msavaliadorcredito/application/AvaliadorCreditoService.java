@@ -3,9 +3,11 @@ package io.github.gabrielmagal.msavaliadorcredito.application;
 import feign.FeignException;
 import io.github.gabrielmagal.msavaliadorcredito.application.ex.DadosClienteNotFoundException;
 import io.github.gabrielmagal.msavaliadorcredito.application.ex.ErroComunicacaoMicrosservicesException;
+import io.github.gabrielmagal.msavaliadorcredito.application.ex.ErroSolicitacaoCartaoException;
 import io.github.gabrielmagal.msavaliadorcredito.domain.model.*;
 import io.github.gabrielmagal.msavaliadorcredito.infra.clients.CartoesResourceClient;
 import io.github.gabrielmagal.msavaliadorcredito.infra.clients.ClienteResourceClient;
+import io.github.gabrielmagal.msavaliadorcredito.infra.mqueue.SolicitacaoEmissaoCartaoPublisher;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -20,6 +23,7 @@ import java.util.stream.Collectors;
 public class AvaliadorCreditoService {
     private final ClienteResourceClient clienteResourceClient;
     private final CartoesResourceClient cartoesResourceClient;
+    private final SolicitacaoEmissaoCartaoPublisher solicitacaoEmissaoCartaoPublisher;
 
     public SituacaoCliente obterSituacaoCliente(String cpf) throws DadosClienteNotFoundException, ErroComunicacaoMicrosservicesException {
         try {
@@ -69,6 +73,15 @@ public class AvaliadorCreditoService {
                 throw new DadosClienteNotFoundException();
             }
             throw new ErroComunicacaoMicrosservicesException(e.getMessage(), status);
+        }
+    }
+
+    public ProtocoloSolicitacaoCartao solicitarEmissaoCartao(DadosSolicitacaoEmissaoCartao dadosSolicitacaoEmissaoCartao) {
+        try {
+            solicitacaoEmissaoCartaoPublisher.solicitarCartao(dadosSolicitacaoEmissaoCartao);
+            return new ProtocoloSolicitacaoCartao(UUID.randomUUID().toString());
+        } catch (Exception e) {
+            throw new ErroSolicitacaoCartaoException(e.getMessage());
         }
     }
 }

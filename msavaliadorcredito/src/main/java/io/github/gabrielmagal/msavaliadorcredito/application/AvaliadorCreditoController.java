@@ -2,9 +2,8 @@ package io.github.gabrielmagal.msavaliadorcredito.application;
 
 import io.github.gabrielmagal.msavaliadorcredito.application.ex.DadosClienteNotFoundException;
 import io.github.gabrielmagal.msavaliadorcredito.application.ex.ErroComunicacaoMicrosservicesException;
-import io.github.gabrielmagal.msavaliadorcredito.domain.model.DadosAvaliacao;
-import io.github.gabrielmagal.msavaliadorcredito.domain.model.RetornoAvaliacaoCliente;
-import io.github.gabrielmagal.msavaliadorcredito.domain.model.SituacaoCliente;
+import io.github.gabrielmagal.msavaliadorcredito.application.ex.ErroSolicitacaoCartaoException;
+import io.github.gabrielmagal.msavaliadorcredito.domain.model.*;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,6 +42,17 @@ public class AvaliadorCreditoController {
             return ResponseEntity.notFound().build();
         } catch (ErroComunicacaoMicrosservicesException e) {
             return ResponseEntity.status(HttpStatus.resolve(e.getStatus())).build();
+        }
+    }
+
+    @PostMapping("solicitacoes-cartao")
+    public ResponseEntity solicitarCartao(@RequestBody DadosSolicitacaoEmissaoCartao dadosSolicitacaoEmissaoCartao) {
+        try {
+            ProtocoloSolicitacaoCartao protocoloSolicitacaoCartao = avaliadorCreditoService
+                    .solicitarEmissaoCartao(dadosSolicitacaoEmissaoCartao);
+            return ResponseEntity.ok(protocoloSolicitacaoCartao);
+        } catch (ErroSolicitacaoCartaoException e) {
+            return ResponseEntity.internalServerError().body(e.getMessage());
         }
     }
 }
