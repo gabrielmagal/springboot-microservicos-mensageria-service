@@ -1,3 +1,12 @@
+# Projeto
+Esse projeto tem como objetivo efetuar a comunicação entre vários serviços e também a conexão com uma mensageria (RabbitMq) e um serviço de autenticação (Keycloak).<br/>
+Basicamente temos 5 serviços:
+- 1 - EurekaServer - O Spring Cloud Eureka Server é uma ferramenta essencial para a construção de sistemas distribuídos baseados em microsserviços.
+- 2 - Micro Serviço de Clientes - Efetuamos o cadastro do usuário.
+- 3 - Micro Serviço de Cartões - Efetuamos o cadastro de um determinado cartão.
+- 4 - Micro Serviço de Avaliação de Crédito - Efetuamos a conexão entre Cliente e Cartão para sabermos o limite disponível para o usuário.
+- 5 - Micro Serviço de CloudGateway - Utilizamos para termos um único centralizador de requisições.
+
 # Como rodar o projeto?
 1 - Suba o Docker na sua máquina. <br/>
 2 - Rode o Script: "Run.ps1", esse Script irá efetuar todas configurações necessárias para rodar o projeto.<br/>
