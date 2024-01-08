@@ -1,1 +1,3 @@
-Para rodar o RabbitMQ via Docker -> docker run -it --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3.12-management
+# Rodar o Projeto
+1 - Suba o Docker na sua máquina.
+2 - Rode o Script: "Run.ps1", esse Script irá efetuar todas configurações necessárias para rodar o projeto.
