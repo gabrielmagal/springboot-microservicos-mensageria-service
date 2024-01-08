@@ -5,6 +5,10 @@ Write-Host "Executando a compilacao do projeto"
 mvn clean install -DskipTests
 Write-Host "Compilacao concluida com sucesso!"
 
+Write-Host "Criando uma network padrao para todos!"
+docker network create conexao-network
+Write-Host "Criacao de network feita com sucesso!"
+
 Write-Host "Executando Rabbitmq!"
 docker run -d --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3.12-management
 Write-Host "Concluido Rabbitmq!"
